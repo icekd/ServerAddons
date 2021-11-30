@@ -56,6 +56,44 @@ AddEventHandler('esx_showwealth:updatePoints', function( playerID, points, rval,
 	TriggerClientEvent('esx:showNotification', playerID, 'READ THE RULES! THEY EXIST TO HELP YOU. /help for FAQ & RULES', 2)
 end)
 
+RegisterCommand('checkpoints', function(source, args)
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+	local a = args[1]
+	local yPlayer = ESX.GetPlayerFromId(a)
+	local identifier = yPlayer.getIdentifier()
+	local name = yPlayer.getName()
+    --/checkpoints 31
+	if xPlayer.getGroup() == 'mod' or xPlayer.getGroup() == 'superadmin' or xPlayer.getGroup() == 'admin' then
+			--print("here")
+			MySQL.Async.fetchAll('SELECT points FROM pointDB WHERE identifier = @identifier', {
+				['@identifier'] = identifier
+			},function(affectedRows)
+				if affectedRows[1] ~= nil then
+					-- RETURN POINTS SOMEONE HAS
+					--local text = '[QUERY SUCCESSFUL] ID: ^3' .. a ..  '^0 NAME: ^2' .. affectedRows[1].first .. " " .. affectedRows[1].lastname .. "^0 DOB: ^2" .. affectedRows[1].dob .. '^0 SEX: ^2' .. affectedRows[1].sex
+	    			--TriggerClientEvent('esx_showwealth:moneyRecieve', source, text, source)
+				else
+					--MySQL.Sync.execute("INSERT INTO billing (identifier,sender,target_type,target,label,amount) VALUES (@owner,@sender,@society,@target,@label,@amount)", {['@owner'] = val2, ['@sender'] = val,['@society'] = 'society',['@target'] = 'society_police',['@label'] = 'Fine: Illegal Parking',['@amount'] = '1000' })
+					--MySQL.Sync.execute("UPDATE disc_ammo SET attach = @newval WHERE owner = @identi AND hash = @hash", {['@newval'] = '[]', ['@identi'] = identi,['@hash'] = hash})
+					-- IF USER NOT FOUND CREATE ENTRY IN DATABASE
+					--local text = '^1(ERROR)^0 No one matching this DNA sequence is registered in the Federal CODIS Database!'
+	    			--TriggerClientEvent('esx_showwealth:moneyRecieve', source, text, source)
+				end
+			end)
+		end
+end)
+
+
+--Check how many points a user has accumulated   /checkpoints 31   --> Player `Name` has x amount of points
+
+-- Update Player points  /updatepoints 265 1[1 or 5 or 10] -- UPDATE current and adds to it 
+-- If playerpoints was 10 now it will say Player `Name` now has x amount of points
+-- deal with condition if not in system update their points , repeat this  Player `Name` now has x amount of points
+
+-- Update Player points /setpoints 265 ANYVALUE -- UPDATE current and adds to it 
+-- similar to add except for superadmin and above
+
 --CREATE TABLE pointsDB (
 	-- identifier VARCHAR(20),
    -- points INT(11),
