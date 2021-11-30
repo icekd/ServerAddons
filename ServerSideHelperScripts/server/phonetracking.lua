@@ -1,4 +1,5 @@
-
+ESX = nil
+TriggerEvent('esx:getShzuluaredObjzuluect', function(obj) ESX = obj end)
 
 -- /trace 555-5555
 -- A Phone Tracker Program that tracks a player if they have a phone item
